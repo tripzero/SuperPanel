@@ -8,10 +8,15 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,7 +27,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.content.Context;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeech.OnInitListener;
+import java.util.Locale;
+
 public class MainActivity extends Activity {
+
+    private GpsService gpsService;
+    // location stuff
+    private TextView latituteField;
+    private TextView longitudeField;
+    private TextView distanceField;
 
     // UUIDs for UAT service and associated characteristics.
     public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
@@ -40,6 +61,8 @@ public class MainActivity extends Activity {
     private BluetoothGatt gatt;
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
+
+    private boolean mIsBound;
 
     // Main BTLE device callback where much of the logic occurs.
     private BluetoothGattCallback callback = new BluetoothGattCallback() {
@@ -121,17 +144,71 @@ public class MainActivity extends Activity {
         }
     };
 
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // This is called when the connection with the service has been
+            // established, giving us the service object we can use to
+            // interact with the service.  Because we have bound to a explicit
+            // service that we know is running in our own process, we can
+            // cast its IBinder to a concrete class and directly access it.
+            gpsService = ((GpsService.GpsBinder)service).getService();
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // This is called when the connection with the service has been
+            // unexpectedly disconnected -- that is, its process crashed.
+            // Because it is running in our same process, we should never
+            // see this happen.
+            gpsService = null;
+        }
+    };
+
+    void doBindService() {
+        // Establish a connection with the service.  We use an explicit
+        // class name because we want a specific service implementation that
+        // we know will be running in our own process (and thus won't be
+        // supporting component replacement by other applications).
+
+        Intent intent = new Intent(MainActivity.this,
+                GpsService.class);
+
+        startService(intent);
+
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+    }
+
+    void doUnbindService() {
+        if (mIsBound) {
+            // Detach our existing connection.
+            unbindService(mConnection);
+            mIsBound = false;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        doUnbindService();
+    }
+
     // OnCreate, called once to initialize the activity.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        latituteField = (TextView) findViewById(R.id.TextView02);
+        longitudeField = (TextView) findViewById(R.id.TextView04);
+        distanceField = (TextView) findViewById(R.id.distance);
+
         // Grab references to UI elements.
         messages = (TextView) findViewById(R.id.messages);
         input = (EditText) findViewById(R.id.input);
 
         adapter = BluetoothAdapter.getDefaultAdapter();
+
+        doBindService();
     }
 
     // OnResume, called right before UI is displayed.  Start the BTLE connection.
@@ -175,6 +252,15 @@ public class MainActivity extends Activity {
         }
     }
 
+    public void toggleTracking(View view) {
+        boolean tracking = gpsService.getTracking();
+
+        gpsService.setTracking(!tracking);
+
+        Button startTracking = (Button) findViewById(R.id.startTracking);
+
+        startTracking.setText(tracking ? "Stop Tracking" : "Start Tracking");
+    }
     // Write some text to the messages text view.
     // Care is taken to do this on the main UI thread so writeLine can be called
     // from any thread (like the BTLE callback).
@@ -245,7 +331,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -262,5 +348,6 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
