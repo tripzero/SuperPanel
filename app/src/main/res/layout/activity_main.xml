@@ -10,10 +10,60 @@
     tools:context="com.tonydicola.bletest.app.MainActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/linearLayout23423423"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dip"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/Connected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Connected: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/ConnectedField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/signalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/SingalStrength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Signal Strength: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/SignalStrengthField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
@@ -22,12 +72,162 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="Latitude: "
+            android:text="Current: "
             android:textSize="20dip" >
         </TextView>
 
         <TextView
-            android:id="@+id/TextView02"
+            android:id="@+id/CurrentField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3333"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/OutputVoltText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Output Volts: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/VoltsField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout234231"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/CurrentPowerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Watts: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/WattsField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout167854"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/HighWattsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="High Watts: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/HighWattsField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout16766854"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/SystemWatts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Total System Watts: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/SystemWattsField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout16444237854"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/PWMValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="PWM Value: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/PWMValueField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1644423785t54"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/SystemVolts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Input Volts: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/SystemVoltsField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
@@ -46,12 +246,36 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
-            android:text="Longitute: "
+            android:text="Pressure: "
             android:textSize="20dip" >
         </TextView>
 
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/PressureField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/Temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="5dip"
+            android:text="Temperature: "
+            android:textSize="20dip" >
+        </TextView>
+
+        <TextView
+            android:id="@+id/TemperatureField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
@@ -65,7 +289,7 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView04"
+            android:id="@+id/DistanceLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
@@ -91,40 +315,6 @@
         android:layout_alignParentTop="true"
         android:text="Start Tracking"
         android:onClick="toggleTracking"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"/>
-        <Button
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="Send"
-            android:onClick="sendClick"/>
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/send"
-        android:layout_alignParentBottom="true">
-
-        <TextView
-            android:id="@+id/messages"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </ScrollView>
 
 
 </LinearLayout>
