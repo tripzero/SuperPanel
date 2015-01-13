@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.1.71/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="0f6d5c1ef2e982c3b7858408e3df389cf5d202da">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-d8127f7e5efc90577bf4406351b684f4af857926.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="6a1226f0dd2b8c4b5591be44786c7d59dfab6af2">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-d538a89f3de28fff3008efe78e58c0849246f2a0.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-c8e8f75d204b0b55b697849581736691b83f8913.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.getbase/floatingactionbutton/1.5.1/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="3b465c76432a5bc9292608ab6522b41b5ef292d6">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-fe3878420679215a55746fdbadc72784ac05e2ed.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="00b0b7233e1ec64acebfac40d4983d32d4712426">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-2e3f2bb383fffca89b781eb5b38af913c9544348.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/android-sdk-macosx/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-19fa7f36e5dff1ab039301d6afece261559c2558.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/.gradle/caches/modules-2/files-2.1/com.flaviofaria/kenburnsview/1.0.3/d76e4310f7268bce706e90497d7aa5c82ef3adc/kenburnsview-1.0.3.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="0d76e4310f7268bce706e90497d7aa5c82ef3adc">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/kenburnsview-1.0.3-ed7cbc3704e4aa4f15c459c27c4afdedd027b2af.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/.gradle/caches/modules-2/files-2.1/com.joanzapata.android/android-iconify/1.0.8/7bba1039e3413ac0c82452b431a4aaa76648f7e9/android-iconify-1.0.8.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="7bba1039e3413ac0c82452b431a4aaa76648f7e9">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/android-iconify-1.0.8-1a06233a3932d9def544707a9917f4f0a05c6dbc.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/palette-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="926692214530f39eaed89159237d26cdc0ae6e48">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-e979ca56dbbae01aa524b3e1ac439c407ec28076.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-08e515e480ba78bcd8d3a8e9b85874751e3af530.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.0/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="95fd37732ec852e99f07eeb516a3650172f1d136">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-4cc23e05393c7b303ff022874d37d076c8d6c508.jar" />
+    </item>
+    <item
+        jar="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.1"
+        sha1="4b8945fc23a7461c6fdde15753456d64b0a9358b">
+        <dex dex="/Users/ammonrees/AndroidStudioProjects/SuperPanel-master/app/build/intermediates/pre-dexed/debug/classes-fccb84e9008f8acf375a697c7f28dd0ac2eee261.jar" />
+    </item>
+
+</items>

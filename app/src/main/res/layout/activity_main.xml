@@ -7,6 +7,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context="com.tonydicola.bletest.app.MainActivity">
 
     <LinearLayout
@@ -23,15 +24,17 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Connected: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
             android:id="@+id/ConnectedField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="20dip" >
+            android:text="value"
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -48,15 +51,17 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Signal Strength: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
             android:id="@+id/SignalStrengthField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="20dip" >
+            android:text="value"
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -73,7 +78,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Current: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -81,7 +87,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -98,7 +105,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Output Volts: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -106,7 +114,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -123,7 +132,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Watts: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -131,7 +141,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -148,7 +159,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="High Watts: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -156,7 +168,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -173,7 +186,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Total System Watts: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -181,7 +195,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -189,7 +204,8 @@
         android:id="@+id/linearLayout16444237854"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:id="@+id/PWMValue"
@@ -198,7 +214,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="PWM Value: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -206,7 +223,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -214,7 +232,8 @@
         android:id="@+id/linearLayout1644423785t54"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:textColor="@color/black">
 
         <TextView
             android:id="@+id/SystemVolts"
@@ -223,7 +242,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Input Volts: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -231,7 +251,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -247,7 +268,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Pressure: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -255,7 +277,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -271,7 +294,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Temperature: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -279,7 +303,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="unknown"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
@@ -295,7 +320,8 @@
             android:layout_marginLeft="10dip"
             android:layout_marginRight="5dip"
             android:text="Distance: "
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
 
         <TextView
@@ -303,7 +329,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textSize="20dip" >
+            android:textSize="20dip"
+            android:textColor="@color/black">
         </TextView>
     </LinearLayout>
 
