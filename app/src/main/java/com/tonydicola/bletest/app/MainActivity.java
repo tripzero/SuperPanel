@@ -69,6 +69,8 @@ public class MainActivity extends Activity {
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     Messenger mService = null;
 
+    private String jsonBuffer="";
+
     class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -84,7 +86,8 @@ public class MainActivity extends Activity {
 
                 String jsonStr = bundle.getString("json");
 
-                if(jsonStr == null) return;
+                if(jsonStr == null)
+                    return;
 
                 JSONObject json = null;
                 try {

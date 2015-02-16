@@ -48,7 +48,7 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     private TextToSpeech tts;
 
     private LocationManager locationManager;
-    private String provider;
+    private Location mLocation;
 
     public double getDistance() {
         return distance;
@@ -71,17 +71,38 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
 
     // UUIDs for UAT service and associated characteristics.
     public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
+    public static UUID RBL_UART_UUID = UUID.fromString("713d0000-503e-4c75-ba94-3148f18d941e");
+    public static UUID RBL_RX_UUID = UUID.fromString("713d0002-503e-4c75-ba94-3148f18d941e");
+    public static UUID RBL_TX_UUID = UUID.fromString("713d0003-503e-4c75-ba94-3148f18d941e");
     public static UUID TX_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
     public static UUID RX_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
     // UUID for the BTLE client characteristic which is necessary for notifications.
     public static UUID CLIENT_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
+    public static String GPS_LAT = "lat";
+    public static String GPS_LON = "lon";
+    public static String GPS_Alt = "alt";
+    public static String GPS_ACC = "acy";
+    public static String GPS_SPD = "spd";
+    public static String GPS_BER = "ber";
+    public static String GPS_SAT = "sat";
+    public static String GPS_FIX = "fixt";
     // BTLE state
     private BluetoothAdapter adapter;
     private BluetoothGatt gatt;
     private BluetoothGattCharacteristic tx;
     private BluetoothGattCharacteristic rx;
     private boolean mConnected;
+    private String jsonBuffer = "";
+
+    private void writeToBle(String value)
+    {
+        if(tx == null || gatt == null || !mConnected)
+            return;
+
+        tx.setValue(value);
+        gatt.writeCharacteristic(tx);
+    }
 
     // Main BTLE device callback where much of the logic occurs.
     private BluetoothGattCallback callback = new BluetoothGattCallback() {
@@ -92,20 +113,18 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
             if (newState == BluetoothGatt.STATE_CONNECTED) {
                 writeLine("Connected!");
                 mConnected = true;
-                connectionChanged(true);
+                connectionChanged();
 
                 // Discover services.
                 if (!gatt.discoverServices()) {
                     writeLine("Failed to start discovering services!");
                 }
-            }
-            else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
+            } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
                 writeLine("Disconnected!");
                 mConnected = false;
-                connectionChanged(false);
+                connectionChanged();
                 gatt.connect();
-            }
-            else {
+            } else {
                 writeLine("Connection state changed.  New state: " + newState);
             }
         }
@@ -131,16 +150,28 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
             else {
                 writeLine("Service discovery failed with status: " + status);
             }
-            // Save reference to each characteristic.
-            tx = gatt.getService(UART_UUID).getCharacteristic(TX_UUID);
-            rx = gatt.getService(UART_UUID).getCharacteristic(RX_UUID);
+            // Save reference to each characteristic
+
+            tx = gatt.getService(RBL_UART_UUID).getCharacteristic(TX_UUID);
+            rx = gatt.getService(RBL_UART_UUID).getCharacteristic(RX_UUID);
+
+            if(tx == null)
+            {
+                gatt.getService(RBL_UART_UUID).getCharacteristic(RBL_TX_UUID);
+            }
+
+            if(rx == null)
+            {
+                rx = gatt.getService(RBL_UART_UUID).getCharacteristic(RBL_RX_UUID);
+            }
+
             // Setup notifications on RX characteristic changes (i.e. data received).
             // First call setCharacteristicNotification to enable notification.
-            if (!gatt.setCharacteristicNotification(rx, true)) {
+            if (rx != null && !gatt.setCharacteristicNotification(rx, true)) {
                 writeLine("Couldn't set notifications for RX characteristic!");
             }
             // Next update the RX characteristic's client descriptor to enable notifications.
-            if (rx.getDescriptor(CLIENT_UUID) != null) {
+            if (rx != null && rx.getDescriptor(CLIENT_UUID) != null) {
                 BluetoothGattDescriptor desc = rx.getDescriptor(CLIENT_UUID);
                 desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                 if (!gatt.writeDescriptor(desc)) {
@@ -151,6 +182,50 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
                 writeLine("Couldn't get RX client descriptor!");
             }
         }
+
+        private String getJson()
+        {
+            System.out.println("buffer: " + jsonBuffer);
+
+            int i = jsonBuffer.indexOf("{");
+
+            if( i == -1)
+            {
+                return "";
+            }
+
+            if(i > 0)
+            {
+                // clip off previous message
+                jsonBuffer = jsonBuffer.substring(i);
+            }
+
+            int endMessage = jsonBuffer.indexOf("}");
+
+            if(endMessage == -1 || jsonBuffer.length() < endMessage + 1)
+            {
+                /// Partial message, return;
+                System.out.println("partial message");
+                return "";
+            }
+
+            String jsonStr = jsonBuffer.substring(0, endMessage+1);
+
+            System.out.println("I think i have a complete message: " + jsonStr);
+
+            if(jsonBuffer.length() > endMessage+1)
+            {
+                jsonBuffer = jsonBuffer.substring(endMessage+1);
+                System.out.println("new buffer: " + jsonBuffer);
+            }
+            else
+            {
+                jsonBuffer = "";
+            }
+
+            return jsonStr;
+        }
+
 
         // Called when a remote characteristic changes (like the RX characteristic).
         @Override
@@ -164,9 +239,71 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
             String data = characteristic.getStringValue(0);
 
             System.out.println("received from device: " + data);
-            rawJSon(data);
+
+            jsonBuffer += data;
+
+            String jsonStr;
+
+            boolean locationNeedsUpdate = false;
+
+            while((jsonStr = getJson()) != "") {
+                if(jsonStr.contains(GPS_LAT) ||
+                        jsonStr.contains(GPS_LON) ||
+                        jsonStr.contains(GPS_Alt) ||
+                        jsonStr.contains(GPS_SAT) ||
+                        jsonStr.contains(GPS_SPD) ||
+                        jsonStr.contains(GPS_FIX) ||
+                        jsonStr.contains(GPS_BER))
+                {
+                    /// we need this data here
+                    parseJSon(jsonStr, mLocation);
+                    locationNeedsUpdate = true;
+                }
+                rawJSon(jsonStr);
+            }
+
+            if(locationNeedsUpdate == true)
+            {
+                onLocationChanged(mLocation);
+            }
         }
     };
+
+    public static void parseJSon(String jsonStr, Location location) {
+        JSONObject json = null;
+        try {
+            json = new JSONObject(jsonStr);
+
+            if(json.has(GPS_LAT))
+            {
+                location.setLatitude( json.getInt(GPS_LAT) / 100000);
+            }
+            else if(json.has(GPS_LON))
+            {
+                location.setLongitude(json.getInt(GPS_LON) / 100000);
+            }
+            else if(json.has(GPS_Alt))
+            {
+                location.setAltitude(json.getInt(GPS_Alt));
+            }
+            else if(json.has(GPS_ACC))
+            {
+                location.setAccuracy((float)json.getDouble(GPS_ACC));
+            }
+            else if(json.has(GPS_BER))
+            {
+                location.setBearing((float)json.getDouble(GPS_BER));
+            }
+            else if(json.has(GPS_SPD))
+            {
+                location.setSpeed((float)json.getDouble(GPS_SPD));
+            }
+        }
+        catch(JSONException exception)
+        {
+
+        }
+    }
 
     private void writeLine(String s) {
         System.out.println(s);
@@ -179,7 +316,9 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
         public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
             writeLine("Found device: " + bluetoothDevice.getAddress());
             // Check if the device has the UART service.
-            if (parseUUIDs(bytes).contains(UART_UUID)) {
+            List<UUID> uuuidList = parseUUIDs(bytes);
+
+           if (uuuidList.contains(UART_UUID) || uuuidList.contains(RBL_UART_UUID)) {
                 // Found a device, stop the scan.
                 adapter.stopLeScan(scanCallback);
                 writeLine("Found UART service!");
@@ -187,6 +326,9 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
                 // Control flow will now go to the callback functions when BTLE events occur.
                 gatt = bluetoothDevice.connectGatt(getApplicationContext(), false, callback);
                 gatt.readRemoteRssi();
+            }
+            else {
+                System.out.println("UART_UUID not found");
             }
         }
     };
@@ -250,7 +392,6 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     static final int MSG_SET_CONNECTION = 5;
     static final int MSG_SET_SIGNAL = 10;
 
-
     //receive msgs
 
     static final int MSG_SET_TRACKING = 7;
@@ -268,6 +409,15 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     class IncomingHandler extends Handler { // Handler of incoming messages from clients.
         @Override
         public void handleMessage(Message msg) {
+
+            Bundle bundle = msg.getData();
+            if(bundle != null)
+            {
+                String  cmd = bundle.getString("cmd");
+
+                writeToBle(cmd);
+            }
+
             switch (msg.what) {
                 case MSG_SET_TRACKING:
                     setTracking(msg.arg1 == 1);
@@ -284,7 +434,8 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
         }
     }
 
-    private void connectionChanged(boolean value) {
+    private void connectionChanged() {
+        boolean value = mConnected;
         System.out.println("sending signals change to clients " + String.valueOf(value));
         for (int i=mClients.size()-1; i>=0; i--) {
             try {
@@ -299,7 +450,7 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     }
 
     private void rawJSon(String value) {
-        System.out.println("sending raw json to clients:" +value);
+        System.out.println("sending raw json to clients:" + value);
         for (int i=mClients.size()-1; i>=0; i--) {
             try {
                 Bundle bundle = new Bundle();
@@ -348,18 +499,26 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Criteria criteria = new Criteria();
+        mLocation = new Location("flp");
 
-        provider = locationManager.getBestProvider(criteria, false);
-        Location location = locationManager.getLastKnownLocation(provider);
+        try {
+            locationManager.addTestProvider("flp", false, false, false, false, true,
+                    true, true, 0, 3);
 
-        // Initialize the location fields
-        if (location != null) {
-            System.out.println("Provider " + provider + " has been selected.");
-            onLocationChanged(location);
+            locationManager.setTestProviderEnabled("flp", true);
+        }
+        catch(SecurityException exception)
+        {
+            System.out.println("mock location not enabled");
+            System.out.println(exception.getMessage());
+        }
+        catch (IllegalArgumentException exception)
+        {
+            System.out.println("mock location not enabled");
+            System.out.println(exception.getMessage());
         }
 
-        locationManager.requestLocationUpdates(provider, 10000, 10, this);
+        Criteria criteria = new Criteria();
 
         tts = new TextToSpeech(this, this);
 
@@ -374,6 +533,16 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     public void onLocationChanged(Location location) {
 
         System.out.println("I'm going the distance: " + location.toString());
+
+        try {
+            locationManager.setTestProviderLocation("flp", mLocation);
+        }
+        catch(IllegalArgumentException exception)
+        {
+            System.out.println("incomplete location");
+            System.out.println(exception.getMessage());
+        }
+
         double lat = location.getLatitude();
         double lon = location.getLongitude();
 
@@ -396,10 +565,6 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
 
             oldLat = lat;
             oldLon = lon;
-
-            //distanceChanged(distance);
-            //altitudeChanged(location.getAltitude());
-
         }
         else {
             oldLat = lat;
@@ -425,6 +590,7 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     @Override
     public void onDestroy() {
         writeLine("Cleaning up and being destroyed");
+        locationManager.removeTestProvider("flp");
         if (tts!=null) {
             tts.stop();
             tts.shutdown();
