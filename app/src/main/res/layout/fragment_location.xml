@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollView"
+    android:background="@color/white">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <FrameLayout
+        xmlns:fab="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_gravity="center_horizontal">
+
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/image"
+            android:layout_width="fill_parent"
+            android:layout_height="185dp"
+            android:adjustViewBounds="true"
+
+            android:src="@drawable/location_background" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/pink_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            fab:fab_icon="@drawable/ic_start"
+            fab:fab_colorNormal="@color/material_black_800"
+            fab:fab_colorPressed="@color/material_black_500"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            />
+
+
+    </FrameLayout>
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="-14dp"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="48dp"
+            android:layout_alignParentRight="true"
+            >
+
+    <ImageView
+        android:layout_height="34dp"
+        android:layout_width="34dp"
+        android:layout_marginBottom="8dp"
+        android:shadowColor="#22000000"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:background="@drawable/ic_pressure"         />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Good"
+                android:id="@+id/textView"
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                 />
+
+            <TextView
+                android:id="@+id/pressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Pressure"
+                android:textColor="@color/primary_dark"
+                android:textSize="18dp"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="48dp"
+            android:layout_alignParentLeft="true"
+            >
+
+            <ImageView
+                android:layout_height="34dp"
+                android:layout_width="34dp"
+                android:layout_marginBottom="8dp"
+                android:shadowColor="#22000000"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="1"
+                android:background="@drawable/ic_distance"         />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="2.6 km"
+                android:id="@+id/textView2"
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Distance"
+                android:textColor="@color/primary_dark"
+                android:textSize="18dp"
+
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_centerHorizontal="true"
+            >
+
+            <ImageView
+                android:layout_height="34dp"
+                android:layout_width="34dp"
+                android:layout_marginBottom="8dp"
+                android:shadowColor="#22000000"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="1"
+                android:background="@drawable/ic_temp"         />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="98 deg"
+                android:id="@+id/textView3"
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="Temp"
+                android:textColor="@color/primary_dark"
+                android:textSize="18dp"
+                />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Distance voice notifications"
+        android:textColor="@color/black"
+        android:checked="true"
+        android:id="@+id/checkBox" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight=".7"
+        >
+
+        <ImageView
+            android:layout_height="32dp"
+            android:layout_width="32dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:id="@+id/status"
+            android:layout_marginBottom="8dp"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:background="@drawable/ic_status"         />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/status"
+            android:text="New Text"
+            android:id="@+id/textView5"
+            android:textSize="22dp"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/status"
+            android:text="Connection Status"
+            android:layout_below="@+id/textView5"
+            android:textColor="@color/primary_dark"
+            android:textSize="16dp"
+
+            />
+
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+
+        >
+
+        <ImageView
+            android:layout_height="34dp"
+            android:layout_width="34dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:id="@+id/signal"
+            android:layout_marginBottom="8dp"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:background="@drawable/ic_signal"         />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/signal"
+            android:text="Good"
+            android:id="@+id/textView4"
+            android:textSize="22dp"
+            android:textColor="@color/black"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/signal"
+            android:text="Signal"
+            android:layout_below="@+id/textView4"
+            android:textColor="@color/primary_dark"
+            android:textSize="16dp"
+            />
+
+
+
+    </RelativeLayout>
+
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>

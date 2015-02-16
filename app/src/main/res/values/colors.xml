@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="primary">#689F38</color>
+    <color name="primary_dark">#33691E</color>
+    <color name="accent">#AED581</color>
+
+
+
+    <color name="white">@android:color/white</color>
+    <color name="black">#616161</color>
+    <color name="material_black_800">#424242</color>
+    <color name="material_black_500">#9E9E9E</color>
+
+
+</resources>
