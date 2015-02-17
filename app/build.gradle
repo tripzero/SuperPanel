@@ -30,6 +30,5 @@ dependencies {
     compile 'com.joanzapata.android:android-iconify:1.0.8'
     compile 'com.flaviofaria:kenburnsview:1.0.3'
     compile 'com.getbase:floatingactionbutton:1.5.1'
-
-
+    compile 'com.jjoe64:graphview:4.0.0'
 }

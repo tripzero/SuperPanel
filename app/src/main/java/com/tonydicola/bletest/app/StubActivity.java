@@ -45,6 +45,13 @@ public class StubActivity extends BaseActivity {
     public double longitude;
     public double speed;
 
+    static int ConditionNotSet = 1,
+                PowerDrop = 1 << 1,
+                PowerIncrease = 1 << 2,
+                PowerOrVoltsExceededMax = 1 << 3,
+                InputVoltsDroppedBelowThreshold = 1 << 4;
+
+
     public String location() {
         if(fix)
             return  String.valueOf(latitude) + ", " + String.valueOf(longitude);
@@ -195,7 +202,6 @@ public class StubActivity extends BaseActivity {
                     }
                     if (json.has("pwm")) {
                         int sw = json.getInt("pwm");
-                        System.out.println("pwm: " + String.valueOf(sw));
                         pwmValue = sw;
                     }
                     if (json.has(GpsService.GPS_LAT)) {
@@ -209,6 +215,15 @@ public class StubActivity extends BaseActivity {
                     }
                     if (json.has(GpsService.GPS_FIX)) {
                         fix = json.getInt(GpsService.GPS_FIX) == 1;
+                    }
+                    if (json.has("cnd")) {
+                        int cnd = json.getInt("cnd");
+                        System.out.println("MPPT condition:");
+                        System.out.println("Not set: " + String.valueOf(cnd & ConditionNotSet));
+                        System.out.println("Power Drop: " + String.valueOf(cnd & PowerDrop));
+                        System.out.println("Power Increase: " + String.valueOf(cnd & PowerIncrease));
+                        System.out.println("Exceeding max watts or volts: " + String.valueOf(cnd & PowerOrVoltsExceededMax));
+                        System.out.println("input volts below threshold: " + String.valueOf(cnd & InputVoltsDroppedBelowThreshold));
                     }
 
                     for(DataListener i : listeners)
