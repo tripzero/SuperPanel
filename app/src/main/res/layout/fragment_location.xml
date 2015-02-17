@@ -14,10 +14,10 @@
     <FrameLayout
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_horizontal">
 
-        <com.flaviofaria.kenburnsview.KenBurnsView
+        <!--<com.flaviofaria.kenburnsview.KenBurnsView
             android:id="@+id/image"
             android:layout_width="fill_parent"
             android:layout_height="185dp"
@@ -34,7 +34,7 @@
             fab:fab_colorPressed="@color/material_black_500"
             android:layout_gravity="bottom|right"
             android:layout_margin="16dp"
-            />
+            />-->
 
 
     </FrameLayout>
@@ -47,7 +47,7 @@
         android:layout_marginTop="-14dp"
         >
 
-        <LinearLayout
+        <!--<LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -84,14 +84,14 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="Pressure"
+                android:text="Location"
                 android:textColor="@color/primary_dark"
                 android:textSize="18dp"
 
                 />
 
 
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:orientation="vertical"
@@ -119,8 +119,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="2.6 km"
-                android:id="@+id/textView2"
+                android:text="0 km"
+                android:id="@+id/distanceText"
                 android:textSize="22dp"
                 android:textColor="@color/black"
                 />
@@ -146,8 +146,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_centerHorizontal="true"
-            >
+            android:layout_centerHorizontal="true">
 
             <ImageView
                 android:layout_height="34dp"
@@ -166,8 +165,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_gravity="center_horizontal"
-                android:text="98 deg"
-                android:id="@+id/textView3"
+                android:text="0 F"
+                android:id="@+id/temperatureText"
                 android:textSize="22dp"
                 android:textColor="@color/black"
                 />
@@ -231,8 +230,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/status"
-            android:text="New Text"
-            android:id="@+id/textView5"
+            android:text="Searching"
+            android:id="@+id/locationText"
             android:textSize="22dp"
             android:textColor="@color/black"
             />
@@ -241,8 +240,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/status"
-            android:text="Connection Status"
-            android:layout_below="@+id/textView5"
+            android:text="Location"
+            android:layout_below="@+id/locationText"
             android:textColor="@color/primary_dark"
             android:textSize="16dp"
 
@@ -278,8 +277,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/signal"
-            android:text="Good"
-            android:id="@+id/textView4"
+            android:text=""
+            android:id="@+id/signalText"
             android:textSize="22dp"
             android:textColor="@color/black"
             />
@@ -288,8 +287,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@+id/signal"
-            android:text="Signal"
-            android:layout_below="@+id/textView4"
+            android:text="Connected"
+            android:id="@+id/connectedText"
+            android:layout_below="@+id/signalText"
             android:textColor="@color/primary_dark"
             android:textSize="16dp"
             />

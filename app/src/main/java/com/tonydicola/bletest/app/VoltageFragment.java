@@ -11,10 +11,11 @@ import android.widget.TextView;
 /**
  * Created by ammonrees on 1/2/15.
  */
-public class VoltageFragment extends Fragment{
+public class VoltageFragment extends Fragment implements DataListener{
 
     int fragVal;
-    TextView txt1,txt2,txt3,txt4,txt5;
+    TextView current, volts, watts, highWatts, inputVolts, pwm;
+    StubActivity activity;
     public static VoltageFragment init(int val) {
         VoltageFragment voltageFrag = new VoltageFragment();
         Bundle args = new Bundle();
@@ -27,6 +28,17 @@ public class VoltageFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragVal = getArguments() != null ? getArguments().getInt("val") : 1;
+
+        activity = (StubActivity)getActivity();
+
+        activity.registerListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        activity.unregisterListener(this);
     }
 
     @Override
@@ -37,21 +49,29 @@ public class VoltageFragment extends Fragment{
         //  Typeface tf2 = Typeface.createFromAsset(context.getAssets(), "fonts/RobotoSlab-Bold.ttf");
         Typeface tf3 = Typeface.createFromAsset(getActivity().getAssets(), "fonts/RobotoSlab-Regular.ttf");
 
-        txt1 = (TextView) rootView.findViewById(R.id.textView);
-        txt1.setTypeface(tf);
-        txt2 = (TextView) rootView.findViewById(R.id.textView2);
-        txt2.setTypeface(tf);
-        txt3 = (TextView) rootView.findViewById(R.id.textView3);
-        txt3.setTypeface(tf);
-        txt4 = (TextView) rootView.findViewById(R.id.textView4);
-        txt4.setTypeface(tf);
-        txt5 = (TextView) rootView.findViewById(R.id.textView5);
-        txt5.setTypeface(tf);
-
-
-
-
+        current = (TextView) rootView.findViewById(R.id.currentText);
+        current.setTypeface(tf);
+        volts = (TextView) rootView.findViewById(R.id.OutputVoltText);
+        volts.setTypeface(tf);
+        inputVolts = (TextView) rootView.findViewById(R.id.inputVoltsTest);
+        inputVolts.setTypeface(tf);
+        watts = (TextView) rootView.findViewById(R.id.wattsText);
+        watts.setTypeface(tf);
+        highWatts = (TextView) rootView.findViewById(R.id.HighWattsText);
+        highWatts.setTypeface(tf);
+        pwm = (TextView) rootView.findViewById(R.id.pwmText);
+        pwm.setTypeface(tf);
 
         return rootView;
     }
+
+    @Override
+    public void onDataChanged() {
+        StubActivity.setAmps(current, activity.current);
+        StubActivity.setVolts(volts, activity.voltage);
+        StubActivity.setVolts(inputVolts, activity.inputVolts);
+        StubActivity.setWatts(watts, activity.watts);
+        StubActivity.setWatts(highWatts, activity.highWatts);
+        StubActivity.setPercentage(pwm, ((double)activity.pwmValue / 254.0)*100.0);
     }
+}

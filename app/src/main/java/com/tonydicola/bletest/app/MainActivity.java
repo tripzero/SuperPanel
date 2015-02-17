@@ -69,8 +69,6 @@ public class MainActivity extends Activity {
     final Messenger mMessenger = new Messenger(new IncomingHandler());
     Messenger mService = null;
 
-    private String jsonBuffer="";
-
     class IncomingHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {

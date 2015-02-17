@@ -11,17 +11,17 @@ import android.widget.TextView;
 /**
  * Created by ammonrees on 1/2/15.
  */
-public class LocationFragment extends Fragment {
+public class LocationFragment extends Fragment implements DataListener {
 
-    private TextView pressureField;
     private TextView temperatureField;
     private TextView distanceField;
     private TextView connectedField;
     private TextView signalField;
+    private TextView locationField;
 
     int fragVal;
-    TextView txt1,txt2,txt3,txt4,txt5;
 
+    StubActivity activity;
 
     public static LocationFragment init(int val) {
         LocationFragment locationFrag = new LocationFragment();
@@ -36,6 +36,7 @@ public class LocationFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragVal = getArguments() != null ? getArguments().getInt("val") : 1;
+
     }
 
     @Override
@@ -52,17 +53,22 @@ public class LocationFragment extends Fragment {
         signalField = (TextView) rootView.findViewById(R.id.SignalStrengthField);
 
 
-        txt1 = (TextView) rootView.findViewById(R.id.textView);
-        txt1.setTypeface(tf);
-        txt2 = (TextView) rootView.findViewById(R.id.textView2);
-        txt2.setTypeface(tf);
-        txt3 = (TextView) rootView.findViewById(R.id.textView3);
-        txt3.setTypeface(tf);
-        txt4 = (TextView) rootView.findViewById(R.id.textView4);
-        txt4.setTypeface(tf);
-        txt5 = (TextView) rootView.findViewById(R.id.textView5);
-        txt5.setTypeface(tf);
+        temperatureField = (TextView) rootView.findViewById(R.id.temperatureText);
+        temperatureField.setTypeface(tf);
+        distanceField = (TextView) rootView.findViewById(R.id.distanceText);
+        distanceField.setTypeface(tf);
+        connectedField = (TextView) rootView.findViewById(R.id.connectedText);
+        connectedField.setTypeface(tf);
+        signalField = (TextView) rootView.findViewById(R.id.signalText);
+        signalField.setTypeface(tf);
+        locationField = (TextView) rootView.findViewById(R.id.locationText);
+        locationField.setTypeface(tf);
 
         return rootView;
+    }
+
+    @Override
+    public void onDataChanged() {
+        locationField.setText(activity.location());
     }
 }

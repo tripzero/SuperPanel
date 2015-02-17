@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Criteria;
@@ -33,8 +34,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+
+;
+
 public class GpsService extends Service implements LocationListener, TextToSpeech.OnInitListener,
-        GpsStatus.Listener {
+        GpsStatus.Listener, BleListener {
 
     private boolean tracking;
     private double distance;
@@ -70,14 +74,9 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     }
 
     // UUIDs for UAT service and associated characteristics.
-    public static UUID UART_UUID = UUID.fromString("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
-    public static UUID RBL_UART_UUID = UUID.fromString("713d0000-503e-4c75-ba94-3148f18d941e");
-    public static UUID RBL_RX_UUID = UUID.fromString("713d0002-503e-4c75-ba94-3148f18d941e");
-    public static UUID RBL_TX_UUID = UUID.fromString("713d0003-503e-4c75-ba94-3148f18d941e");
-    public static UUID TX_UUID = UUID.fromString("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
-    public static UUID RX_UUID = UUID.fromString("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
-    // UUID for the BTLE client characteristic which is necessary for notifications.
-    public static UUID CLIENT_UUID = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+    public static String SuperPanel_UUID = "5FAAF494-D4C6-483E-B592-D1A6FFD436C9";
+    private static String rxUUid = "5faaf495-d4c6-483e-b592-d1a6ffd436c9";
+    private static String txUUid = "5faaf496-d4c6-483e-b592-d1a6ffd436c9";
 
     public static String GPS_LAT = "lat";
     public static String GPS_LON = "lon";
@@ -88,186 +87,18 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     public static String GPS_SAT = "sat";
     public static String GPS_FIX = "fixt";
     // BTLE state
-    private BluetoothAdapter adapter;
-    private BluetoothGatt gatt;
-    private BluetoothGattCharacteristic tx;
-    private BluetoothGattCharacteristic rx;
+    Ble ble;
+
     private boolean mConnected;
     private String jsonBuffer = "";
 
     private void writeToBle(String value)
     {
-        if(tx == null || gatt == null || !mConnected)
+        if(!mConnected)
             return;
 
-        tx.setValue(value);
-        gatt.writeCharacteristic(tx);
+        ble.sendMessage(value);
     }
-
-    // Main BTLE device callback where much of the logic occurs.
-    private BluetoothGattCallback callback = new BluetoothGattCallback() {
-        // Called whenever the device connection state changes, i.e. from disconnected to connected.
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            super.onConnectionStateChange(gatt, status, newState);
-            if (newState == BluetoothGatt.STATE_CONNECTED) {
-                writeLine("Connected!");
-                mConnected = true;
-                connectionChanged();
-
-                // Discover services.
-                if (!gatt.discoverServices()) {
-                    writeLine("Failed to start discovering services!");
-                }
-            } else if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                writeLine("Disconnected!");
-                mConnected = false;
-                connectionChanged();
-                gatt.connect();
-            } else {
-                writeLine("Connection state changed.  New state: " + newState);
-            }
-        }
-
-        @Override
-        public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
-            super.onReadRemoteRssi(gatt,rssi,status);
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                writeLine(String.format("BluetoothGatt ReadRssi[%d]", rssi));
-                signalChanged(rssi);
-            }
-        }
-
-        // Called when services have been discovered on the remote device.
-        // It seems to be necessary to wait for this discovery to occur before
-        // manipulating any services or characteristics.
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            super.onServicesDiscovered(gatt, status);
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                writeLine("Service discovery completed!");
-            }
-            else {
-                writeLine("Service discovery failed with status: " + status);
-            }
-            // Save reference to each characteristic
-
-            tx = gatt.getService(RBL_UART_UUID).getCharacteristic(TX_UUID);
-            rx = gatt.getService(RBL_UART_UUID).getCharacteristic(RX_UUID);
-
-            if(tx == null)
-            {
-                gatt.getService(RBL_UART_UUID).getCharacteristic(RBL_TX_UUID);
-            }
-
-            if(rx == null)
-            {
-                rx = gatt.getService(RBL_UART_UUID).getCharacteristic(RBL_RX_UUID);
-            }
-
-            // Setup notifications on RX characteristic changes (i.e. data received).
-            // First call setCharacteristicNotification to enable notification.
-            if (rx != null && !gatt.setCharacteristicNotification(rx, true)) {
-                writeLine("Couldn't set notifications for RX characteristic!");
-            }
-            // Next update the RX characteristic's client descriptor to enable notifications.
-            if (rx != null && rx.getDescriptor(CLIENT_UUID) != null) {
-                BluetoothGattDescriptor desc = rx.getDescriptor(CLIENT_UUID);
-                desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                if (!gatt.writeDescriptor(desc)) {
-                    writeLine("Couldn't write RX client descriptor value!");
-                }
-            }
-            else {
-                writeLine("Couldn't get RX client descriptor!");
-            }
-        }
-
-        private String getJson()
-        {
-            System.out.println("buffer: " + jsonBuffer);
-
-            int i = jsonBuffer.indexOf("{");
-
-            if( i == -1)
-            {
-                return "";
-            }
-
-            if(i > 0)
-            {
-                // clip off previous message
-                jsonBuffer = jsonBuffer.substring(i);
-            }
-
-            int endMessage = jsonBuffer.indexOf("}");
-
-            if(endMessage == -1 || jsonBuffer.length() < endMessage + 1)
-            {
-                /// Partial message, return;
-                System.out.println("partial message");
-                return "";
-            }
-
-            String jsonStr = jsonBuffer.substring(0, endMessage+1);
-
-            System.out.println("I think i have a complete message: " + jsonStr);
-
-            if(jsonBuffer.length() > endMessage+1)
-            {
-                jsonBuffer = jsonBuffer.substring(endMessage+1);
-                System.out.println("new buffer: " + jsonBuffer);
-            }
-            else
-            {
-                jsonBuffer = "";
-            }
-
-            return jsonStr;
-        }
-
-
-        // Called when a remote characteristic changes (like the RX characteristic).
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            super.onCharacteristicChanged(gatt, characteristic);
-
-            ///when we read something, get the signal strength:
-
-            gatt.readRemoteRssi();
-
-            String data = characteristic.getStringValue(0);
-
-            System.out.println("received from device: " + data);
-
-            jsonBuffer += data;
-
-            String jsonStr;
-
-            boolean locationNeedsUpdate = false;
-
-            while((jsonStr = getJson()) != "") {
-                if(jsonStr.contains(GPS_LAT) ||
-                        jsonStr.contains(GPS_LON) ||
-                        jsonStr.contains(GPS_Alt) ||
-                        jsonStr.contains(GPS_SAT) ||
-                        jsonStr.contains(GPS_SPD) ||
-                        jsonStr.contains(GPS_FIX) ||
-                        jsonStr.contains(GPS_BER))
-                {
-                    /// we need this data here
-                    parseJSon(jsonStr, mLocation);
-                    locationNeedsUpdate = true;
-                }
-                rawJSon(jsonStr);
-            }
-
-            if(locationNeedsUpdate == true)
-            {
-                onLocationChanged(mLocation);
-            }
-        }
-    };
 
     public static void parseJSon(String jsonStr, Location location) {
         JSONObject json = null;
@@ -309,82 +140,6 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
         System.out.println(s);
     }
 
-    // BTLE device scanning callback.
-    private BluetoothAdapter.LeScanCallback scanCallback = new BluetoothAdapter.LeScanCallback() {
-        // Called when a device is found.
-        @Override
-        public void onLeScan(BluetoothDevice bluetoothDevice, int i, byte[] bytes) {
-            writeLine("Found device: " + bluetoothDevice.getAddress());
-            // Check if the device has the UART service.
-            List<UUID> uuuidList = parseUUIDs(bytes);
-
-           if (uuuidList.contains(UART_UUID) || uuuidList.contains(RBL_UART_UUID)) {
-                // Found a device, stop the scan.
-                adapter.stopLeScan(scanCallback);
-                writeLine("Found UART service!");
-                // Connect to the device.
-                // Control flow will now go to the callback functions when BTLE events occur.
-                gatt = bluetoothDevice.connectGatt(getApplicationContext(), false, callback);
-                gatt.readRemoteRssi();
-            }
-            else {
-                System.out.println("UART_UUID not found");
-            }
-        }
-    };
-    // Filtering by custom UUID is broken in Android 4.3 and 4.4, see:
-    //   http://stackoverflow.com/questions/18019161/startlescan-with-128-bit-uuids-doesnt-work-on-native-android-ble-implementation?noredirect=1#comment27879874_18019161
-    // This is a workaround function from the SO thread to manually parse advertisement data.
-    private List<UUID> parseUUIDs(final byte[] advertisedData) {
-        List<UUID> uuids = new ArrayList<UUID>();
-
-        int offset = 0;
-        while (offset < (advertisedData.length - 2)) {
-            int len = advertisedData[offset++];
-            if (len == 0)
-                break;
-
-            int type = advertisedData[offset++];
-            switch (type) {
-                case 0x02: // Partial list of 16-bit UUIDs
-                case 0x03: // Complete list of 16-bit UUIDs
-                    while (len > 1) {
-                        int uuid16 = advertisedData[offset++];
-                        uuid16 += (advertisedData[offset++] << 8);
-                        len -= 2;
-                        uuids.add(UUID.fromString(String.format("%08x-0000-1000-8000-00805f9b34fb", uuid16)));
-                    }
-                    break;
-                case 0x06:// Partial list of 128-bit UUIDs
-                case 0x07:// Complete list of 128-bit UUIDs
-                    // Loop through the advertised 128-bit UUID's.
-                    while (len >= 16) {
-                        try {
-                            // Wrap the advertised bits and order them.
-                            ByteBuffer buffer = ByteBuffer.wrap(advertisedData, offset++, 16).order(ByteOrder.LITTLE_ENDIAN);
-                            long mostSignificantBit = buffer.getLong();
-                            long leastSignificantBit = buffer.getLong();
-                            uuids.add(new UUID(leastSignificantBit,
-                                    mostSignificantBit));
-                        } catch (IndexOutOfBoundsException e) {
-                            // Defensive programming.
-                            //Log.e(LOG_TAG, e.toString());
-                            continue;
-                        } finally {
-                            // Move the offset to read the next uuid.
-                            offset += 15;
-                            len -= 16;
-                        }
-                    }
-                    break;
-                default:
-                    offset += (len - 1);
-                    break;
-            }
-        }
-        return uuids;
-    }
-
     @Override
     public void onGpsStatusChanged(int event) {
 
@@ -404,6 +159,93 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
     @Override
     public IBinder onBind(Intent intent) {
         return mMessenger.getBinder();
+    }
+
+    @Override
+    public void onBleMessage(String data) {
+        System.out.println("received from device: " + data);
+
+        jsonBuffer += data;
+
+        String jsonStr;
+
+        boolean locationNeedsUpdate = false;
+
+        while((jsonStr = getJson()) != "") {
+            if(jsonStr.contains(GPS_LAT) ||
+                    jsonStr.contains(GPS_LON) ||
+                    jsonStr.contains(GPS_Alt) ||
+                    jsonStr.contains(GPS_SAT) ||
+                    jsonStr.contains(GPS_SPD) ||
+                    jsonStr.contains(GPS_FIX) ||
+                    jsonStr.contains(GPS_BER))
+            {
+                /// we need this data here
+                parseJSon(jsonStr, mLocation);
+                locationNeedsUpdate = true;
+            }
+            rawJSon(jsonStr);
+        }
+
+        if(locationNeedsUpdate == true)
+        {
+            onLocationChanged(mLocation);
+        }
+    }
+
+    private String getJson()
+    {
+        System.out.println("buffer: " + jsonBuffer);
+
+        int i = jsonBuffer.indexOf("{");
+
+        if( i == -1)
+        {
+            return "";
+        }
+
+        if(i > 0)
+        {
+            // clip off previous message
+            jsonBuffer = jsonBuffer.substring(i);
+        }
+
+        int endMessage = jsonBuffer.indexOf("}");
+
+        if(endMessage == -1 || jsonBuffer.length() < endMessage + 1)
+        {
+            /// Partial message, return;
+            System.out.println("partial message");
+            return "";
+        }
+
+        String jsonStr = jsonBuffer.substring(0, endMessage+1);
+
+        System.out.println("I think i have a complete message: " + jsonStr);
+
+        if(jsonBuffer.length() > endMessage+1)
+        {
+            jsonBuffer = jsonBuffer.substring(endMessage+1);
+            System.out.println("new buffer: " + jsonBuffer);
+        }
+        else
+        {
+            jsonBuffer = "";
+        }
+
+        return jsonStr;
+    }
+
+    @Override
+    public void onBleConnect() {
+        mConnected = true;
+        connectionChanged();
+    }
+
+    @Override
+    public void onBleDisconnect() {
+        mConnected = false;
+        connectionChanged();
     }
 
     class IncomingHandler extends Handler { // Handler of incoming messages from clients.
@@ -522,9 +364,7 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
 
         tts = new TextToSpeech(this, this);
 
-        adapter = BluetoothAdapter.getDefaultAdapter();
-
-        adapter.startLeScan(scanCallback);
+        ble = new Ble(getApplicationContext(), this, SuperPanel_UUID, rxUUid, txUUid);
 
         return START_NOT_STICKY;
     }
@@ -594,14 +434,6 @@ public class GpsService extends Service implements LocationListener, TextToSpeec
         if (tts!=null) {
             tts.stop();
             tts.shutdown();
-        }
-        if (gatt != null) {
-            // For better reliability be careful to disconnect and close the connection.
-            gatt.disconnect();
-            gatt.close();
-            gatt = null;
-            tx = null;
-            rx = null;
         }
     }
 
